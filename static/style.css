@@ -30,6 +30,119 @@ button:hover {
 .btn {
   display: inline-block;
   margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #00bcd4;
+  color: white;
+  border-radius: 8px;
   text-decoration: none;
-  color: #00bcd4;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #008c9e;
+}
+
+/* Result Box Styling */
+.result-box {
+  margin-top: 30px;
+  padding: 25px;
+  background: #1e2630;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  border-left: 4px solid #00bcd4;
+}
+
+.result-box h3 {
+  margin: 0 0 15px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2d3748;
+  font-size: 1.4em;
+}
+
+.result-box h3.healthy {
+  color: #4ade80; /* Green for healthy predictions */
+}
+
+.result-box h3.failure {
+  color: #f87171; /* Red for failure predictions */
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.stat {
+  background: #242f3e;
+  padding: 12px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+  display: block;
+  color: #94a3b8;
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 1.1em;
+}
+
+.prediction-details {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #2d3748;
+}
+
+.prediction-details h4 {
+  color: #94a3b8;
+  margin: 0 0 10px 0;
+  font-size: 1em;
+}
+
+.prediction-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px 0;
+}
+
+.prediction-details li {
+  padding: 5px 0;
+  color: #e2e8f0;
+  font-family: monospace;
+}
+
+.prediction-details p {
+  margin: 10px 0 0 0;
+  color: #94a3b8;
+  font-size: 0.9em;
+}
+
+.error {
+  color: #f87171;
+  background: #2a1a1a;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  border-left: 4px solid #f87171;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+    width: 90%;
+  }
+  
+  input, button {
+    width: 100%;
+    margin: 10px 0;
+  }
 }
