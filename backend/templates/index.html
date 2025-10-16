@@ -34,9 +34,63 @@
         body: formData,
       });
       const data = await response.json();
-      document.getElementById("result").innerHTML = 
-        `<h3>Prediction: ${data.prediction}</h3>
-         <p>Failure Probability: ${(data.probability * 100).toFixed(2)}%</p>`;
+      
+      // Format the results
+      const resultDiv = document.getElementById("result");
+      
+      if (data.status === 'error') {
+        resultDiv.innerHTML = `
+          <div class="error">
+            <h3>Error</h3>
+            <p>${data.error || 'An error occurred'}</p>
+          </div>`;
+        return;
+      }
+      
+      // Format the results
+      const failurePercentage = data.failure_percentage.toFixed(2);
+      const avgPrediction = data.average_prediction.toFixed(4);
+      const predictionRange = `From ${data.prediction_range.min.toFixed(2)} to ${data.prediction_range.max.toFixed(2)}`;
+      
+      // Create prediction details
+      let predictionDetails = '';
+      if (data.sample_predictions) {
+        predictionDetails = `
+          <div class="prediction-details">
+            <h4>Sample Predictions:</h4>
+            <ul>
+              ${data.sample_predictions.map(p => `<li>${p.toFixed(4)}</li>`).join('')}
+            </ul>
+            <p>Threshold used: ${data.threshold_used}</p>
+          </div>`;
+      }
+      
+      // Determine the prediction status class
+      const statusClass = data.prediction.includes('Detected') ? 'failure' : 'healthy';
+      
+      resultDiv.innerHTML = `
+        <div class="result-box">
+          <h3 class="${statusClass}">${data.prediction}</h3>
+          <div class="stats">
+            <div class="stat">
+              <span class="stat-label">Failure Rate:</span>
+              <span class="stat-value">${failurePercentage}%</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Failures Detected:</span>
+              <span class="stat-value">${data.failure_count} / ${data.total_samples} samples</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Average Prediction:</span>
+              <span class="stat-value">${avgPrediction}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Prediction Range:</span>
+              <span class="stat-value">${predictionRange}</span>
+            </div>
+          </div>
+          ${predictionDetails}
+        </div>`;
     });
   </script>
 </body>
