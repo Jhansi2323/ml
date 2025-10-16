@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machine Health Report</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>🧾 Machine Health Report</h1>
+    <p>This report summarizes machine condition predictions and failure risks.</p>
+
+    <table id="reportTable" border="1" style="margin:auto; border-collapse:collapse; width:80%;">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Value</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Temperature</td><td id="tempVal">--</td><td id="tempStatus">--</td></tr>
+        <tr><td>Vibration</td><td id="vibVal">--</td><td id="vibStatus">--</td></tr>
+        <tr><td>Pressure</td><td id="presVal">--</td><td id="presStatus">--</td></tr>
+        <tr><td>Speed</td><td id="speedVal">--</td><td id="speedStatus">--</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="finalPrediction" style="margin-top: 20px;">Overall Status: --</h3>
+
+    <canvas id="chart" width="400" height="150" style="margin-top:20px;"></canvas>
+
+    <button id="downloadBtn">⬇️ Download Report (PDF)</button>
+    <a href="/" class="btn">Back to Home</a>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // Simulated data (you can pass from Flask using render_template parameters)
+    const reportData = {
+      temperature: 75,
+      vibration: 0.38,
+      pressure: 102.5,
+      speed: 1450,
+      prediction: "✅ No Failure",
+      probability: 0.22
+    };
+
+    // Display values
+    document.getElementById("tempVal").textContent = reportData.temperature + " °C";
+    document.getElementById("vibVal").textContent = reportData.vibration + " m/s²";
+    document.getElementById("presVal").textContent = reportData.pressure + " kPa";
+    document.getElementById("speedVal").textContent = reportData.speed + " rpm";
+    document.getElementById("finalPrediction").textContent =
+      "Overall Status: " + reportData.prediction + " (Risk: " + (reportData.probability * 100).toFixed(1) + "%)";
+
+    // Update parameter status logic
+    document.getElementById("tempStatus").textContent = reportData.temperature > 80 ? "⚠️ High" : "✅ Normal";
+    document.getElementById("vibStatus").textContent = reportData.vibration > 0.5 ? "⚠️ High" : "✅ Normal";
+    document.getElementById("presStatus").textContent = reportData.pressure > 110 ? "⚠️ High" : "✅ Normal";
+    document.getElementById("speedStatus").textContent = reportData.speed > 1600 ? "⚠️ High" : "✅ Normal";
+
+    // Chart.js visualization
+    const ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Temperature', 'Vibration', 'Pressure', 'Speed'],
+        datasets: [{
+          label: 'Sensor Readings',
+          data: [
+            reportData.temperature,
+            reportData.vibration,
+            reportData.pressure,
+            reportData.speed
+          ],
+          borderColor: '#00bcd4',
+          backgroundColor: 'rgba(0,188,212,0.3)',
+          borderWidth: 2,
+          fill: true
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    // PDF Download using jsPDF
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text("Machine Health Report", 20, 20);
+      doc.text("Temperature: " + reportData.temperature + " °C", 20, 40);
+      doc.text("Vibration: " + reportData.vibration + " m/s²", 20, 50);
+      doc.text("Pressure: " + reportData.pressure + " kPa", 20, 60);
+      doc.text("Speed: " + reportData.speed + " rpm", 20, 70);
+      doc.text("Prediction: " + reportData.prediction, 20, 90);
+      doc.text("Risk Probability: " + (reportData.probability * 100).toFixed(1) + "%", 20, 100);
+      doc.save("Machine_Health_Report.pdf");
+    });
+  </script>
+</body>
+</html>
+

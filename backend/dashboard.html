@@ -1,0 +1,30 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Maintenance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Equipment Performance Dashboard</h1>
+    <canvas id="failureChart" width="400" height="200"></canvas>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('failureChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Temperature', 'Vibration', 'Pressure', 'Speed'],
+        datasets: [{
+          label: 'Sensor Value Analysis',
+          data: [68, 0.35, 101.3, 1500], // Example values
+          backgroundColor: ['#00bcd4', '#2196f3', '#ff5722', '#4caf50']
+        }]
+      }
+    });
+  </script>
+</body>
+</html>
+

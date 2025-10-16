@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predictive Maintenance</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>AI-Powered Predictive Maintenance</h1>
+    <p>Upload machine sensor data (CSV) to predict failure probability</p>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" id="fileInput" required />
+      <button type="submit">Predict</button>
+    </form>
+
+    <div id="result"></div>
+
+    <a href="/dashboard" class="btn">Go to Dashboard</a>
+  </div>
+
+  <script>
+    const form = document.getElementById("uploadForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById("fileInput").files[0];
+      const formData = new FormData();
+      formData.append("file", fileInput);
+
+      const response = await fetch("/predict", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      document.getElementById("result").innerHTML = 
+        `<h3>Prediction: ${data.prediction}</h3>
+         <p>Failure Probability: ${(data.probability * 100).toFixed(2)}%</p>`;
+    });
+  </script>
+</body>
+</html>
