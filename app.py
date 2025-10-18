@@ -78,20 +78,8 @@ def predict():
         # Print prediction statistics for debugging
         print(f"Prediction stats - Min: {min_pred}, Max: {max_pred}, Mean: {avg_prediction}")
         
-        # Calculate a dynamic threshold based on the prediction distribution
-        import numpy as np
-        
-        # Calculate percentiles to understand the distribution
-        p75 = np.percentile(predictions, 75)
-        p95 = np.percentile(predictions, 95)
-        
-        # Use 90th percentile for more sensitive failure detection
-        # This will flag the top 10% of predictions as potential failures
-        threshold = np.percentile(predictions, 90)
-        
-        # Ensure threshold is reasonable compared to the max prediction
-        threshold = min(threshold, max_pred * 0.95)  # Don't get too close to max
-        threshold = max(threshold, p75 * 1.2)  # At least 20% above 75th percentile
+        # Set fixed threshold
+        threshold = 314
         
         # Get binary predictions based on threshold
         binary_predictions = (predictions > threshold).astype(int)
@@ -117,12 +105,7 @@ def predict():
                 'max': float(max_pred)
             },
             'sample_predictions': [float(x) for x in sample_predictions],
-            'threshold_used': float(threshold),
-            'percentiles': {
-                'p75': float(p75),
-                'p95': float(p95),
-                'p97_5': float(threshold)
-            }
+            'threshold_used': float(threshold)
         }
         
         return jsonify(response_data)
